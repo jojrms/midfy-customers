@@ -18,28 +18,22 @@ import {
   TextField,
   Box,
   Typography,
+  Modal,
+  Button,
 } from "@mui/material";
 import { DeleteOutline, Edit } from "@mui/icons-material";
 import { Copyright } from "../../components/Copyright";
 import { Customer } from "../../api/types";
 import { getCustomers } from "../../api";
 import styles from "./style";
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
+import { ActionCustomer } from "./types";
 
 const defaultTheme = createTheme();
 
 const Customers = () => {
   const [customers, setCustomers] = React.useState<Customer[]>([]);
-  const [editCustomer, setEditCustomer] = React.useState<Customer | null>(null);
+  const [actionCustumer, setActionCustomer] =
+    React.useState<ActionCustomer | null>(null);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -105,7 +99,12 @@ const Customers = () => {
                         <IconButton
                           aria-label="edit"
                           size="medium"
-                          onClick={() => setEditCustomer(customer)}
+                          onClick={() =>
+                            setActionCustomer({
+                              action: "edit",
+                              customer: customer,
+                            })
+                          }
                         >
                           <Edit />
                         </IconButton>
@@ -113,6 +112,12 @@ const Customers = () => {
                           aria-label="delete"
                           size="medium"
                           color="error"
+                          onClick={() =>
+                            setActionCustomer({
+                              action: "delete",
+                              customer: customer,
+                            })
+                          }
                         >
                           <DeleteOutline />
                         </IconButton>
@@ -135,27 +140,28 @@ const Customers = () => {
         <Copyright sx={{ pt: 4 }} />
       </Container>
 
-      {editCustomer && (
+      {actionCustumer && (
         <Drawer
           anchor="right"
-          open={editCustomer !== null}
-          onClose={() => setEditCustomer(null)}
+          open={actionCustumer.action === "edit"}
+          onClose={() => setActionCustomer(null)}
           sx={{ zIndex: 10000 }}
         >
           <Avatar
-            alt={`${editCustomer.name} photo`}
-            src={editCustomer.avatar}
+            alt={`${actionCustumer.customer.name} photo`}
+            src={actionCustumer.customer.avatar}
             sx={styles.avatar}
           />
 
           <Typography
             component="h1"
-            variant="h6"
+            variant="h5"
             color="inherit"
             noWrap
-            sx={{ flexGrow: 1 }}
+            textAlign="center"
+            sx={styles.customerName}
           >
-            {editCustomer.name}
+            {actionCustumer.customer.name}
           </Typography>
 
           <Box component="form" autoComplete="off">
@@ -163,17 +169,63 @@ const Customers = () => {
               id="outlined-edit-email"
               label="E-mail"
               type="email"
-              defaultValue={editCustomer.email}
+              defaultValue={actionCustumer.customer.email}
             />
             <TextField
               id="outlined-edit-jobTitle"
               label="Cargo"
               type="text"
-              defaultValue={editCustomer.jobTitle}
+              defaultValue={actionCustumer.customer.jobTitle}
             />
           </Box>
         </Drawer>
       )}
+
+      <Modal
+        open={actionCustumer?.action === "delete"}
+        onClose={() => setActionCustomer(null)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styles.modal}>
+          <Typography
+            id="modal-modal-title"
+            variant="h5"
+            fontWeight="bold"
+            component="h1"
+          >
+            Excluir colaborador
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }} component="p">
+            Você tem certeza que deseja excluir o colaborador{" "}
+            <b>{actionCustumer?.customer.name}</b>?
+          </Typography>
+
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="space-around"
+            sx={styles.buttonsGrid}
+          >
+            <Button
+              onClick={() => setActionCustomer(null)}
+              variant="text"
+              size="medium"
+              color="inherit"
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="contained"
+              size="medium"
+              color="error"
+              endIcon={<DeleteOutline />}
+            >
+              Excluir
+            </Button>
+          </Grid>
+        </Box>
+      </Modal>
     </ThemeProvider>
   );
 };
