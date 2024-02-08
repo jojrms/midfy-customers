@@ -24,7 +24,7 @@ import {
 import { DeleteOutline, Edit } from "@mui/icons-material";
 import { Copyright } from "../../components/Copyright";
 import { Customer } from "../../api/types";
-import { getCustomers } from "../../api";
+import { deleteCustomer, getCustomers } from "../../api";
 import styles from "./style";
 import { ActionCustomer } from "./types";
 
@@ -52,6 +52,16 @@ const Customers = () => {
     try {
       const response = await getCustomers();
       setCustomers(response);
+    } catch {
+      console.log("error");
+    }
+  };
+
+  const deleteCustomerFunction = async (id: number | string) => {
+    try {
+      const response = await deleteCustomer(id);
+      setActionCustomer(null);
+      getCustomersFunction();
     } catch {
       console.log("error");
     }
@@ -141,91 +151,100 @@ const Customers = () => {
       </Container>
 
       {actionCustumer && (
-        <Drawer
-          anchor="right"
-          open={actionCustumer.action === "edit"}
-          onClose={() => setActionCustomer(null)}
-          sx={{ zIndex: 10000 }}
-        >
-          <Avatar
-            alt={`${actionCustumer.customer.name} photo`}
-            src={actionCustumer.customer.avatar}
-            sx={styles.avatar}
-          />
-
-          <Typography
-            component="h1"
-            variant="h5"
-            color="inherit"
-            noWrap
-            textAlign="center"
-            sx={styles.customerName}
+        <>
+          <Drawer
+            anchor="right"
+            open={actionCustumer.action === "edit"}
+            onClose={() => setActionCustomer(null)}
+            sx={{ zIndex: 10000 }}
           >
-            {actionCustumer.customer.name}
-          </Typography>
-
-          <Box component="form" autoComplete="off">
-            <TextField
-              id="outlined-edit-email"
-              label="E-mail"
-              type="email"
-              defaultValue={actionCustumer.customer.email}
+            <Avatar
+              alt={`${actionCustumer.customer.name} photo`}
+              src={actionCustumer.customer.avatar}
+              sx={styles.avatar}
             />
-            <TextField
-              id="outlined-edit-jobTitle"
-              label="Cargo"
-              type="text"
-              defaultValue={actionCustumer.customer.jobTitle}
-            />
-          </Box>
-        </Drawer>
-      )}
 
-      <Modal
-        open={actionCustumer?.action === "delete"}
-        onClose={() => setActionCustomer(null)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styles.modal}>
-          <Typography
-            id="modal-modal-title"
-            variant="h5"
-            fontWeight="bold"
-            component="h1"
-          >
-            Excluir colaborador
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }} component="p">
-            Você tem certeza que deseja excluir o colaborador{" "}
-            <b>{actionCustumer?.customer.name}</b>?
-          </Typography>
-
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="space-around"
-            sx={styles.buttonsGrid}
-          >
-            <Button
-              onClick={() => setActionCustomer(null)}
-              variant="text"
-              size="medium"
+            <Typography
+              component="h1"
+              variant="h5"
               color="inherit"
+              noWrap
+              textAlign="center"
+              sx={styles.customerName}
             >
-              Cancelar
-            </Button>
-            <Button
-              variant="contained"
-              size="medium"
-              color="error"
-              endIcon={<DeleteOutline />}
-            >
-              Excluir
-            </Button>
-          </Grid>
-        </Box>
-      </Modal>
+              {actionCustumer.customer.name}
+            </Typography>
+
+            <Box component="form" autoComplete="off">
+              <TextField
+                id="outlined-edit-email"
+                label="E-mail"
+                type="email"
+                defaultValue={actionCustumer.customer.email}
+              />
+              <TextField
+                id="outlined-edit-jobTitle"
+                label="Cargo"
+                type="text"
+                defaultValue={actionCustumer.customer.jobTitle}
+              />
+            </Box>
+          </Drawer>
+
+          <Modal
+            open={actionCustumer.action === "delete"}
+            onClose={() => setActionCustomer(null)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={styles.modal}>
+              <Typography
+                id="modal-modal-title"
+                variant="h5"
+                fontWeight="bold"
+                component="h1"
+              >
+                Excluir colaborador
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                sx={{ mt: 2 }}
+                component="p"
+              >
+                Você tem certeza que deseja excluir o colaborador{" "}
+                <b>{actionCustumer.customer.name}</b>?
+              </Typography>
+
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-around"
+                sx={styles.buttonsGrid}
+              >
+                <Button
+                  onClick={() => setActionCustomer(null)}
+                  variant="text"
+                  size="medium"
+                  color="inherit"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  color="error"
+                  endIcon={<DeleteOutline />}
+                  onClick={() =>
+                    deleteCustomerFunction(actionCustumer.customer.id)
+                  }
+                >
+                  Excluir
+                </Button>
+              </Grid>
+            </Box>
+          </Modal>
+        </>
+      )}
     </ThemeProvider>
   );
 };

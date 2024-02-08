@@ -10,3 +10,12 @@ export const getCustomers = async () => {
       throw error;
     }
 };
+
+export const deleteCustomer = async (id: number | string) => {
+  try {
+    const {data: customer} = await axios.delete(`${baseUrl}/customers/${id}`);
+    return customer;
+  } catch (error) {
+    throw error;
+  }
+};
