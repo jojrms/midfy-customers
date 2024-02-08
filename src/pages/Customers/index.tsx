@@ -14,11 +14,16 @@ import {
   Paper,
   Avatar,
   IconButton,
+  Drawer,
+  TextField,
+  Box,
+  Typography,
 } from "@mui/material";
-import { DeleteOutline, Visibility, Edit } from "@mui/icons-material";
+import { DeleteOutline, Edit } from "@mui/icons-material";
 import { Copyright } from "../../components/Copyright";
 import { Customer } from "../../api/types";
 import { getCustomers } from "../../api";
+import styles from "./style";
 
 function createData(
   name: string,
@@ -34,6 +39,7 @@ const defaultTheme = createTheme();
 
 const Customers = () => {
   const [customers, setCustomers] = React.useState<Customer[]>([]);
+  const [editCustomer, setEditCustomer] = React.useState<Customer | null>(null);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -83,7 +89,7 @@ const Customers = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((customer: Customer) => (
                     <TableRow
-                      key={customer.name}
+                      key={customer.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
@@ -96,10 +102,11 @@ const Customers = () => {
                       <TableCell align="right">{customer.email}</TableCell>
                       <TableCell align="right">{customer.jobTitle}</TableCell>
                       <TableCell align="right">
-                        <IconButton aria-label="see" size="medium">
-                          <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" size="medium">
+                        <IconButton
+                          aria-label="edit"
+                          size="medium"
+                          onClick={() => setEditCustomer(customer)}
+                        >
                           <Edit />
                         </IconButton>
                         <IconButton
@@ -127,6 +134,46 @@ const Customers = () => {
         </Grid>
         <Copyright sx={{ pt: 4 }} />
       </Container>
+
+      {editCustomer && (
+        <Drawer
+          anchor="right"
+          open={editCustomer !== null}
+          onClose={() => setEditCustomer(null)}
+          sx={{ zIndex: 10000 }}
+        >
+          <Avatar
+            alt={`${editCustomer.name} photo`}
+            src={editCustomer.avatar}
+            sx={styles.avatar}
+          />
+
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            {editCustomer.name}
+          </Typography>
+
+          <Box component="form" autoComplete="off">
+            <TextField
+              id="outlined-edit-email"
+              label="E-mail"
+              type="email"
+              defaultValue={editCustomer.email}
+            />
+            <TextField
+              id="outlined-edit-jobTitle"
+              label="Cargo"
+              type="text"
+              defaultValue={editCustomer.jobTitle}
+            />
+          </Box>
+        </Drawer>
+      )}
     </ThemeProvider>
   );
 };
