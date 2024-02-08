@@ -13,8 +13,9 @@ import {
   TablePagination,
   Paper,
   Avatar,
-  Button,
+  IconButton,
 } from "@mui/material";
+import { DeleteOutline, Visibility, Edit } from "@mui/icons-material";
 import { Copyright } from "../../components/Copyright";
 import { Customer } from "../../api/types";
 import { getCustomers } from "../../api";
@@ -95,9 +96,19 @@ const Customers = () => {
                       <TableCell align="right">{customer.email}</TableCell>
                       <TableCell align="right">{customer.jobTitle}</TableCell>
                       <TableCell align="right">
-                        <Button variant="text">Ver</Button>
-                        <Button variant="text">Editar</Button>
-                        <Button variant="text">Excluir</Button>
+                        <IconButton aria-label="see" size="medium">
+                          <Visibility />
+                        </IconButton>
+                        <IconButton aria-label="edit" size="medium">
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          size="medium"
+                          color="error"
+                        >
+                          <DeleteOutline />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
