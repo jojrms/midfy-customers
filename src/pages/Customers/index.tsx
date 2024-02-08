@@ -1,5 +1,9 @@
 const Customers = () => {
-  return <></>;
+  return (
+    <>
+      <p>customers</p>
+    </>
+  );
 };
 
 export default Customers;
