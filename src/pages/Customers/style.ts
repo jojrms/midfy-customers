@@ -27,5 +27,9 @@ export default {
     },
     buttonsGrid: {
         mt: 4
+    },
+    addNewUserButton: {
+        marginLeft: 'auto',
+        my: 3,
     }
 };

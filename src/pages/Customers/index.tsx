@@ -21,19 +21,21 @@ import {
   Modal,
   Button,
 } from "@mui/material";
-import { DeleteOutline, Edit } from "@mui/icons-material";
+import { Add, DeleteOutline, Edit } from "@mui/icons-material";
 import { Copyright } from "../../components/Copyright";
 import { Customer } from "../../api/types";
 import { deleteCustomer, getCustomers } from "../../api";
 import styles from "./style";
 import { ActionCustomer } from "./types";
+import CustomerForm from "./components/Form";
 
 const defaultTheme = createTheme();
 
 const Customers = () => {
   const [customers, setCustomers] = React.useState<Customer[]>([]);
-  const [actionCustumer, setActionCustomer] =
+  const [actionCustomer, setActionCustomer] =
     React.useState<ActionCustomer | null>(null);
+  const [createCustomer, setCreateCustomer] = React.useState<boolean>(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -76,7 +78,15 @@ const Customers = () => {
       <Toolbar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
-          <p>Teste</p>
+          <Button
+            sx={styles.addNewUserButton}
+            variant="contained"
+            endIcon={<Add />}
+            onClick={() => setCreateCustomer(true)}
+          >
+            Criar novo usuário
+          </Button>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -150,17 +160,17 @@ const Customers = () => {
         <Copyright sx={{ pt: 4 }} />
       </Container>
 
-      {actionCustumer && (
+      {actionCustomer && (
         <>
           <Drawer
             anchor="right"
-            open={actionCustumer.action === "edit"}
+            open={actionCustomer.action === "edit"}
             onClose={() => setActionCustomer(null)}
             sx={{ zIndex: 10000 }}
           >
             <Avatar
-              alt={`${actionCustumer.customer.name} photo`}
-              src={actionCustumer.customer.avatar}
+              alt={`${actionCustomer.customer.name} photo`}
+              src={actionCustomer.customer.avatar}
               sx={styles.avatar}
             />
 
@@ -172,7 +182,7 @@ const Customers = () => {
               textAlign="center"
               sx={styles.customerName}
             >
-              {actionCustumer.customer.name}
+              {actionCustomer.customer.name}
             </Typography>
 
             <Box component="form" autoComplete="off">
@@ -180,19 +190,19 @@ const Customers = () => {
                 id="outlined-edit-email"
                 label="E-mail"
                 type="email"
-                defaultValue={actionCustumer.customer.email}
+                defaultValue={actionCustomer.customer.email}
               />
               <TextField
                 id="outlined-edit-jobTitle"
                 label="Cargo"
                 type="text"
-                defaultValue={actionCustumer.customer.jobTitle}
+                defaultValue={actionCustomer.customer.jobTitle}
               />
             </Box>
           </Drawer>
 
           <Modal
-            open={actionCustumer.action === "delete"}
+            open={actionCustomer.action === "delete"}
             onClose={() => setActionCustomer(null)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
@@ -212,7 +222,7 @@ const Customers = () => {
                 component="p"
               >
                 Você tem certeza que deseja excluir o colaborador{" "}
-                <b>{actionCustumer.customer.name}</b>?
+                <b>{actionCustomer.customer.name}</b>?
               </Typography>
 
               <Grid
@@ -235,7 +245,7 @@ const Customers = () => {
                   color="error"
                   endIcon={<DeleteOutline />}
                   onClick={() =>
-                    deleteCustomerFunction(actionCustumer.customer.id)
+                    deleteCustomerFunction(actionCustomer.customer.id)
                   }
                 >
                   Excluir
@@ -245,6 +255,8 @@ const Customers = () => {
           </Modal>
         </>
       )}
+
+      <CustomerForm setCreateCustomer={setCreateCustomer} createCustomer />
     </ThemeProvider>
   );
 };
