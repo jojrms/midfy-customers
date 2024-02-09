@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## MIDFY TESTE - Engenheiro frontend React.js
 
+## LINK PARA VERCEL: https://midfy-customers.vercel.app/customers
+
 ## Sobre o projeto
 
 Foi desenvolvido uma interface com dados mockados vindos do mockAPI e componentes do Material UI. Ao iniciar o projeto, você será redirecionado ao dashboard, uma tela padrão da lib, mas ao clicar na opção "customers" no menu lateral, será direcionado para a tela criada. 
