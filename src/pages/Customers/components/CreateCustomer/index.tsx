@@ -86,17 +86,19 @@ const CustomerForm = ({
                               );
                           }}
                         />
-                        <IconButton
-                          color="primary"
-                          aria-label="upload picture"
-                          component="span"
-                          sx={styles.fakeAvatar}
-                        >
-                          <Photo />
-                        </IconButton>
+                        <label htmlFor="icon-button-file">
+                          <IconButton
+                            color="primary"
+                            aria-label="upload picture"
+                            component="span"
+                            sx={styles.fakeAvatar} // Certifique-se de que `styles.fakeAvatar` está definido corretamente
+                          >
+                            <Photo />
+                          </IconButton>
+                        </label>
                         {form.values.avatar && (
                           <div
-                            style={{ justifyItems: "center", display: "grid" }}
+                            style={{ display: "grid", justifyItems: "center" }}
                           >
                             <img
                               src={URL.createObjectURL(form.values.avatar)}
