@@ -19,3 +19,21 @@ export const deleteCustomer = async (id: number | string) => {
     throw error;
   }
 };
+
+export const createNewCustomer = async (customerValues: any) => {
+  try{
+    const formData = new FormData();
+    formData.append('name', customerValues.name);
+    formData.append('email', customerValues.email);
+    formData.append('avatar', customerValues.avatar);
+
+    const response = await axios.post(`${baseUrl}/customers/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  }catch (error) {
+    throw error;
+  }
+};

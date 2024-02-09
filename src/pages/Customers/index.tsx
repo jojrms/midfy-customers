@@ -256,7 +256,10 @@ const Customers = () => {
         </>
       )}
 
-      <CustomerForm setCreateCustomer={setCreateCustomer} createCustomer />
+      <CustomerForm
+        setCreateCustomer={setCreateCustomer}
+        createCustomer={createCustomer}
+      />
     </ThemeProvider>
   );
 };
