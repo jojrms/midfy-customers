@@ -2,17 +2,18 @@ import {
   Box,
   Button,
   Grid,
+  IconButton,
   Input,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
 import { CustomerFormType } from "./types";
-import { Done } from "@mui/icons-material";
+import { Done, Photo } from "@mui/icons-material";
 import styles from "./style";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { createNewCustomer } from "../../../api";
+import { createNewCustomer } from "../../../../api";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("O nome é obrigatório"),
@@ -69,13 +70,48 @@ const CustomerForm = ({
 
               <Grid container direction="column" spacing={2}>
                 <Grid item>
-                  <Field
-                    as={Input}
-                    type="file"
-                    name="avatar"
-                    inputProps={{ accept: "image/*" }}
-                    fullWidth
-                  />
+                  <Field name="avatar">
+                    {({ form, field }: any) => (
+                      <div>
+                        <input
+                          accept="image/*"
+                          id="icon-button-file"
+                          type="file"
+                          style={{ display: "none" }}
+                          onChange={(event) => {
+                            event.currentTarget.files &&
+                              form.setFieldValue(
+                                field.name,
+                                event.currentTarget.files[0]
+                              );
+                          }}
+                        />
+                        <IconButton
+                          color="primary"
+                          aria-label="upload picture"
+                          component="span"
+                          sx={styles.fakeAvatar}
+                        >
+                          <Photo />
+                        </IconButton>
+                        {form.values.avatar && (
+                          <div
+                            style={{ justifyItems: "center", display: "grid" }}
+                          >
+                            <img
+                              src={URL.createObjectURL(form.values.avatar)}
+                              alt="Avatar"
+                              style={{ maxWidth: 100, maxHeight: 100 }}
+                            />
+                            <Typography variant="body2">
+                              {form.values.avatar.name}
+                            </Typography>
+                          </div>
+                        )}
+                        <ErrorMessage name={field.name} />
+                      </div>
+                    )}
+                  </Field>
                   <ErrorMessage name="avatar" />
                 </Grid>
                 <Grid item>

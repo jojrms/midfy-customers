@@ -1,4 +1,3 @@
-
 export default {
     drawerBackground: {
         width: '300vw',
@@ -13,8 +12,13 @@ export default {
     },
     customerName: {
         textAlign: 'center',
-        mt: 2,
-        flexGrow: 1
+        margin: 0,
+        my: 2,
+        flexGrow: 1,
+        height: 'fit-content',
+    },
+    gridForm: {
+        px: 5,
     },
     modal: {
         position: 'absolute',

@@ -20,6 +20,20 @@ export const deleteCustomer = async (id: number | string) => {
   }
 };
 
+export const updateCustomer = async (id: string | number, customerValues: any) => {
+  try{
+    const formData = new FormData();
+    formData.append('name', customerValues.name);
+    formData.append('email', customerValues.email);
+    formData.append('avatar', customerValues.avatar);
+
+    const response = await axios.put(`${baseUrl}/customers/${id}`, formData);
+    return response.data;
+  }catch (error) {
+    throw error;
+  }
+};
+
 export const createNewCustomer = async (customerValues: any) => {
   try{
     const formData = new FormData();

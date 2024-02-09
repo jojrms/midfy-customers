@@ -14,8 +14,6 @@ import {
   Paper,
   Avatar,
   IconButton,
-  Drawer,
-  TextField,
   Box,
   Typography,
   Modal,
@@ -27,7 +25,8 @@ import { Customer } from "../../api/types";
 import { deleteCustomer, getCustomers } from "../../api";
 import styles from "./style";
 import { ActionCustomer } from "./types";
-import CustomerForm from "./components/Form";
+import CustomerForm from "./components/CreateCustomer";
+import EditCustomer from "./components/EditCustomer";
 
 const defaultTheme = createTheme();
 
@@ -162,45 +161,10 @@ const Customers = () => {
 
       {actionCustomer && (
         <>
-          <Drawer
-            anchor="right"
-            open={actionCustomer.action === "edit"}
-            onClose={() => setActionCustomer(null)}
-            sx={{ zIndex: 10000 }}
-          >
-            <Avatar
-              alt={`${actionCustomer.customer.name} photo`}
-              src={actionCustomer.customer.avatar}
-              sx={styles.avatar}
-            />
-
-            <Typography
-              component="h1"
-              variant="h5"
-              color="inherit"
-              noWrap
-              textAlign="center"
-              sx={styles.customerName}
-            >
-              {actionCustomer.customer.name}
-            </Typography>
-
-            <Box component="form" autoComplete="off">
-              <TextField
-                id="outlined-edit-email"
-                label="E-mail"
-                type="email"
-                defaultValue={actionCustomer.customer.email}
-              />
-              <TextField
-                id="outlined-edit-jobTitle"
-                label="Cargo"
-                type="text"
-                defaultValue={actionCustomer.customer.jobTitle}
-              />
-            </Box>
-          </Drawer>
-
+          <EditCustomer
+            setActionCustomer={setActionCustomer}
+            actionCustomer={actionCustomer}
+          />
           <Modal
             open={actionCustomer.action === "delete"}
             onClose={() => setActionCustomer(null)}
